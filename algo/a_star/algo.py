@@ -6,19 +6,19 @@ from algo.a_star.state_wrap import StateWrap
 
 class Algo:
     h_function = None
-    g_function = None
 
-    def __init__(self, h_function, g_function):
+    is_greedy = False
+    is_uniform = False
+
+    def __init__(self, h_function):
         self.h_function = h_function
-        self.g_function = g_function
-
-    def compute_f(self, start_state, current_state, target_state):
-        return self.h_function(current_state, target_state) + self.g_function(start_state, current_state)
 
     def solve(self, start_state, target_state):
         closed_state_wraps = dict()
 
-        start_state_wrap = StateWrap(self.compute_f(start_state, start_state, target_state), start_state)
+        start_state_wrap = StateWrap(self.compute_h(start_state, target_state),
+                                     self.compute_g(None),
+                                     start_state)
 
         open_state_wraps = PriorityQueue()
         open_state_wraps.put((start_state_wrap.f_value, start_state_wrap))
@@ -32,7 +32,8 @@ class Algo:
             closed_state_wraps[current_state_wrap.state] = current_state_wrap
 
             for expanded_state in current_state_wrap.state.expand():
-                expanded_state_wrap = StateWrap(self.compute_f(start_state, expanded_state, target_state),
+                expanded_state_wrap = StateWrap(self.compute_h(expanded_state, target_state),
+                                                self.compute_g(current_state_wrap),
                                                 expanded_state,
                                                 current_state_wrap)
 
@@ -43,6 +44,21 @@ class Algo:
                 open_state_wraps.put((expanded_state_wrap.f_value, expanded_state_wrap))
 
         return None
+
+    def compute_h(self, current_state, target_state):
+        if self.is_uniform:
+            return 0
+
+        return self.h_function(current_state, target_state)
+
+    def compute_g(self, previous_state):
+        if self.is_greedy:
+            return 0
+
+        if previous_state is not None:
+            return previous_state.g_value + 1
+        else:
+            return 0
 
     # noinspection PyMethodMayBeStatic
     def restore_path(self, final_state):

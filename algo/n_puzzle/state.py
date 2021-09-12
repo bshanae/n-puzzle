@@ -54,7 +54,7 @@ class State:
                 if self.is_valid_index(test_index):
                     yield test_index
 
-        def swap(index_a: Tuple[int, int], index_b: Tuple[int, int]) -> 'State':
+        def clone_and_swap(index_a: Tuple[int, int], index_b: Tuple[int, int]) -> 'State':
             row_index_a, value_index_a = index_a
             row_index_b, value_index_b = index_b
 
@@ -68,7 +68,7 @@ class State:
 
         for index, value in self.enumerate():
             for offset_index in apply_offset_on_index(index):
-                yield swap(index, offset_index)
+                yield clone_and_swap(index, offset_index)
 
     cached_enumeration: List[Tuple[Tuple[int, int], int]] = None
 
