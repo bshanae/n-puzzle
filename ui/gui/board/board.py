@@ -66,14 +66,11 @@ class Board:
 
         step_b_to_a = -1 * step_a_to_b[0], -1 * step_a_to_b[1]
 
-        cell_a.is_highlighted = True
-
         while True:
             a_finished = self.animate_cell(cell_a, cell_b_position, step_a_to_b)
             b_finished = self.animate_cell(cell_b, cell_a_position, step_b_to_a)
 
             if a_finished or b_finished:
-                cell_a.is_highlighted = False
                 break
 
             yield None

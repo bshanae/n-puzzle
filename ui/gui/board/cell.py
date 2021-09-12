@@ -12,7 +12,6 @@ class Cell:
     rect: pygame.Rect
     txt_rect: pygame.Rect
     string: string
-    is_highlighted: bool = False
 
     def __init__(self, rect: pygame.Rect, string: string):
         self.rect = rect
@@ -20,14 +19,9 @@ class Cell:
         self.string = string
 
     def draw(self, surface: pygame.Surface):
-        pygame.draw.rect(surface, self.get_color(), self.rect)
+        pygame.draw.rect(surface, settings.CELL_CONTENT_COLOR, self.rect)
+        pygame.draw.rect(surface, settings.CELL_BORDER_COLOR, self.rect, 3)
         ptext.drawbox(self.string, self.text_rect, sysfontname=settings.FONT, color=settings.TEXT_COLOR)
-
-    def get_color(self):
-        if self.is_highlighted:
-            return settings.CELL_HIGHLIGHT_COLOR
-        else:
-            return settings.CELL_NORMAL_COLOR
 
     def get_position(self) -> Vector:
         return self.rect.left, self.rect.top
