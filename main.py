@@ -13,11 +13,7 @@ if __name__ == '__main__':
                                    [12, 13, 14, 15]])
 
     algo = a_star.Algo(n_puzzle.heuristics.manhattan, n_puzzle.heuristics.manhattan)
-    solution_path = algo.solve(start_state, target_state)
+    solution_states = algo.solve(start_state, target_state)
 
-    solution = solution_analyzer.analyze_solution(solution_path)
-
-    if solution:
-        ui.present_solution(solution)
-    else:
-        print("Solution not found")
+    solution = solution_analyzer.analyze_solution(solution_states)
+    ui.present_solution(solution)
