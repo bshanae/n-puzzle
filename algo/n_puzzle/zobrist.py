@@ -1,12 +1,18 @@
 import random
+from typing import List
 
-hash_codes = None
+is_initialized = False
+hash_codes: List[List[List[int]]]
 
 
-def init(dimension):
+def initialize_if_needed(dimension: int):
+    global is_initialized
+    if is_initialized:
+        return
+
     global hash_codes
-
     hash_codes = []
+
     for i in range(0, dimension):
         hash_codes.append([])
         for j in range(0, dimension):
@@ -14,10 +20,11 @@ def init(dimension):
             for k in range(0, dimension * dimension):
                 hash_codes[i][j].append(random.randint(1, 2 ** 64 - 1))
 
+    is_initialized = True
 
-def hash(table):
-    if hash_codes is None:
-        init(len(table))
+
+def hash(table: List[List[int]]) -> int:
+    initialize_if_needed(len(table))
 
     hash_result = 0
 

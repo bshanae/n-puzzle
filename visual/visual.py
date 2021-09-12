@@ -2,9 +2,8 @@ from typing import List
 
 import pygame
 
-from Algo.Move import Move
-from Visual.Board.Board import Board
-from Visual.Context import Settings
+from algo.move import Move
+from visual.context import settings
 
 screen: pygame.Surface
 clock: pygame.time.Clock
@@ -15,8 +14,8 @@ def init():
     pygame.mixer.init()
 
     global screen
-    screen = pygame.display.set_mode((Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT))
-    pygame.display.set_caption(Settings.WINDOW_TITLE)
+    screen = pygame.display.set_mode((settings.WINDOW_WIDTH, settings.WINDOW_HEIGHT))
+    pygame.display.set_caption(settings.WINDOW_TITLE)
 
     global clock
     clock = pygame.time.Clock()
@@ -34,13 +33,13 @@ def visualise(values: List[List[int]], moves: List[Move]):
                 visualise.is_running = False
 
     def process_drawing():
-        screen.fill(Settings.BACKGROUND_COLOR)
+        screen.fill(settings.BACKGROUND_COLOR)
         board.draw(screen)
         pygame.display.update()
 
     def process_updating():
         next(animation, None)
-        clock.tick(Settings.FPS)
+        clock.tick(settings.FPS)
 
     while visualise.is_running:
         process_events()

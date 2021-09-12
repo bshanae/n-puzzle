@@ -1,13 +1,12 @@
-from ctypes import Array
-from typing import List, Tuple
+from typing import List
 
 from pygame import Rect
 
-from Algo.Move import Move
-from Visual.Context import Settings
-from Visual.Board.Cell import Cell
-from Visual.Tools import Math
-from Visual.Tools.Point import Vector
+from algo.move import Move
+from visual.context import settings
+from visual.board.cell import Cell
+from visual.tools import math
+from visual.tools.point import Vector
 
 
 class Board:
@@ -20,11 +19,11 @@ class Board:
         number_of_rows = len(values)
         number_of_columns = len(values[0])
 
-        all_cells_width = (Settings.WINDOW_WIDTH - Settings.BOARD_PADDING * 2)
-        cell_width = (all_cells_width - (number_of_rows + 1) * Settings.BOARD_SPACING) / number_of_rows
+        all_cells_width = (settings.WINDOW_WIDTH - settings.BOARD_PADDING * 2)
+        cell_width = (all_cells_width - (number_of_rows + 1) * settings.BOARD_SPACING) / number_of_rows
 
-        all_cells_height = (Settings.WINDOW_WIDTH - Settings.BOARD_PADDING * 2)
-        cell_height = (all_cells_height - (number_of_rows + 1) * Settings.BOARD_SPACING) / number_of_rows
+        all_cells_height = (settings.WINDOW_WIDTH - settings.BOARD_PADDING * 2)
+        cell_height = (all_cells_height - (number_of_rows + 1) * settings.BOARD_SPACING) / number_of_rows
 
         for row_index in range(number_of_rows):
             row = []
@@ -32,8 +31,8 @@ class Board:
 
             for column_index in range(number_of_columns):
                 cell_rect = Rect(
-                    Settings.BOARD_PADDING + row_index * cell_width + (row_index + 1) * Settings.BOARD_SPACING,
-                    Settings.BOARD_PADDING + column_index * cell_height + (column_index + 1) * Settings.BOARD_SPACING,
+                    settings.BOARD_PADDING + row_index * cell_width + (row_index + 1) * settings.BOARD_SPACING,
+                    settings.BOARD_PADDING + column_index * cell_height + (column_index + 1) * settings.BOARD_SPACING,
                     cell_width,
                     cell_height)
 
@@ -44,9 +43,9 @@ class Board:
 
         def get_pause_length():
             if is_first_pause:
-                return Settings.BOARD_ANIMATION_FIRST_PAUSE
+                return settings.BOARD_ANIMATION_FIRST_PAUSE
             else:
-                return Settings.BOARD_ANIMATION_PAUSE
+                return settings.BOARD_ANIMATION_PAUSE
 
         for move in self.moves:
             for i in range(get_pause_length()):
@@ -62,7 +61,7 @@ class Board:
         cell_a_position = cell_a.get_position()
         cell_b_position = cell_b.get_position()
 
-        step_a_to_b = Math.sign(cell_b_position[0] - cell_a_position[0]), Math.sign(cell_b_position[1] - cell_a_position[1])
+        step_a_to_b = math.sign(cell_b_position[0] - cell_a_position[0]), math.sign(cell_b_position[1] - cell_a_position[1])
         step_b_to_a = -1 * step_a_to_b[0], -1 * step_a_to_b[1]
 
         cell_a.is_highlighted = True
