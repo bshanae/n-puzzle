@@ -2,11 +2,11 @@ from typing import List
 
 from pygame import Rect
 
-from algo.move import Move
-from visual.context import settings
-from visual.board.cell import Cell
-from visual.tools import math
-from visual.tools.point import Vector
+from algo.solution_analyzer.move import Move
+from ui.gui.context import settings
+from ui.gui.board.cell import Cell
+from ui.gui.tools import math
+from ui.gui.tools.point import Vector
 
 
 class Board:
@@ -61,7 +61,9 @@ class Board:
         cell_a_position = cell_a.get_position()
         cell_b_position = cell_b.get_position()
 
-        step_a_to_b = math.sign(cell_b_position[0] - cell_a_position[0]), math.sign(cell_b_position[1] - cell_a_position[1])
+        step_a_to_b = math.sign(cell_b_position[0] - cell_a_position[0]) * settings.BOARD_ANIMATION_SPEED,\
+                      math.sign(cell_b_position[1] - cell_a_position[1]) * settings.BOARD_ANIMATION_SPEED
+
         step_b_to_a = -1 * step_a_to_b[0], -1 * step_a_to_b[1]
 
         cell_a.is_highlighted = True
@@ -76,13 +78,25 @@ class Board:
 
             yield None
 
+        temporary = self.cells[move.index_a[0]][move.index_a[1]]
+        self.cells[move.index_a[0]][move.index_a[1]] = self.cells[move.index_b[0]][move.index_b[1]]
+        self.cells[move.index_b[0]][move.index_b[1]] = temporary
+
     # noinspection PyMethodMayBeStatic
     def animate_cell(self, cell: Cell, stop_position: Vector, step: Vector) -> bool:
         old_position = cell.get_position()
         new_position = old_position[0] + step[0], old_position[1] + step[1]
 
+        is_finished = (step[0] < 0 and new_position[0] <= stop_position[0]) or \
+                      (step[0] > 0 and new_position[0] >= stop_position[0]) or \
+                      (step[1] < 0 and new_position[1] <= stop_position[1]) or \
+                      (step[1] > 0 and new_position[1] >= stop_position[1])
+
+        if is_finished:
+            new_position = stop_position
+
         cell.set_position(new_position)
-        return new_position == stop_position
+        return is_finished
 
     def draw(self, screen):
         for row in self.cells:

@@ -3,9 +3,9 @@ import string
 import pygame
 import pygame.freetype
 
-from visual.context import settings
-from visual.external import ptext
-from visual.tools.point import Vector
+from ui.gui.context import settings
+from ui.gui.external import ptext
+from ui.gui.tools.point import Vector
 
 
 class Cell:

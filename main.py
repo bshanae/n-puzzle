@@ -1,19 +1,23 @@
-from algo import n_puzzle, a_star
+from algo import n_puzzle, a_star, solution_analyzer
+import ui
 
 if __name__ == '__main__':
-    start_state = n_puzzle.State([[4, 2, 1],
-                                  [8, 3, 6],
-                                  [0, 7, 5]])
+    start_state = n_puzzle.State([[1, 0, 2, 3],
+                                  [4, 5, 6, 7],
+                                  [8, 9, 10, 11],
+                                  [12, 13, 14, 15]])
 
-    target_state = n_puzzle.State([[0, 1, 2],
-                                   [3, 4, 5],
-                                   [6, 7, 8]])
+    target_state = n_puzzle.State([[0, 1, 3, 2],
+                                   [4, 5, 6, 7],
+                                   [8, 9, 10, 11],
+                                   [12, 13, 14, 15]])
 
     algo = a_star.Algo(n_puzzle.heuristics.manhattan, n_puzzle.heuristics.manhattan)
-    path = algo.solve(start_state, target_state)
+    solution_path = algo.solve(start_state, target_state)
 
-    if path:
-        for state in path:
-            print(state)
+    solution = solution_analyzer.analyze_solution(solution_path)
+
+    if solution:
+        ui.present_solution(solution)
     else:
         print("Solution not found")

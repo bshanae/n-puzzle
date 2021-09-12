@@ -99,3 +99,9 @@ class State:
             return False
 
         return True
+
+    def diff_with(self, other) -> List[Tuple[int, int]]:
+        for i in range(len(self.values)):
+            for j in range(len(self.values[i])):
+                if self[i, j] != other[i, j]:
+                    yield i, j

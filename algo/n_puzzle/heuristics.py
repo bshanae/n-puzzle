@@ -1,4 +1,4 @@
-from algo.n_puzzle import State
+from algo.n_puzzle.state import State
 
 
 def manhattan(current: State, target: State):

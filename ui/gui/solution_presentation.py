@@ -1,9 +1,9 @@
-from typing import List
 
 import pygame
 
-from algo.move import Move
-from visual.context import settings
+from algo import solution_analyzer
+from ui.gui.board.board import Board
+from ui.gui.context import settings
 
 screen: pygame.Surface
 clock: pygame.time.Clock
@@ -21,16 +21,16 @@ def init():
     clock = pygame.time.Clock()
 
 
-def visualise(values: List[List[int]], moves: List[Move]):
-    board = Board(values, moves)
+def present_solution(solution: solution_analyzer.Solution):
+    board = Board(solution.states[0].values, solution.moves)
     animation = board.animate()
 
-    visualise.is_running = True
+    present_solution.is_running = True
 
     def process_events():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                visualise.is_running = False
+                present_solution.is_running = False
 
     def process_drawing():
         screen.fill(settings.BACKGROUND_COLOR)
@@ -41,7 +41,7 @@ def visualise(values: List[List[int]], moves: List[Move]):
         next(animation, None)
         clock.tick(settings.FPS)
 
-    while visualise.is_running:
+    while present_solution.is_running:
         process_events()
         process_drawing()
         process_updating()
