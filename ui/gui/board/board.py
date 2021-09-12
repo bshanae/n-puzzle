@@ -31,8 +31,8 @@ class Board:
 
             for column_index in range(number_of_columns):
                 cell_rect = Rect(
-                    settings.BOARD_PADDING + row_index * cell_width + (row_index + 1) * settings.BOARD_SPACING,
-                    settings.BOARD_PADDING + column_index * cell_height + (column_index + 1) * settings.BOARD_SPACING,
+                    settings.BOARD_PADDING + column_index * cell_width + (column_index + 1) * settings.BOARD_SPACING,
+                    settings.BOARD_PADDING + row_index * cell_height + (row_index + 1) * settings.BOARD_SPACING,
                     cell_width,
                     cell_height)
 

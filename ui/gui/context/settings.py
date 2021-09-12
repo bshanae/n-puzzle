@@ -18,4 +18,4 @@ CELL_HIGHLIGHT_COLOR = (242, 84, 45)
 
 TEXT_COLOR = (235, 235, 235)
 
-FONT = "Courier New"
+FONT = "Menlo"
