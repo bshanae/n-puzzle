@@ -5,12 +5,13 @@ from algo.n_puzzle import zobrist
 
 
 class State:
-    values: List[List[int]]
-    hash: int
+    # TODO: check to del this
+    # values: List[List[int]]
+    # hash: int
 
     def __init__(self, values: List[List[int]]):
-        self.values = values
-        self.hash = zobrist.hash(self.values)
+        self.values: List[List[int]] = values
+        self.hash: int = zobrist.hash(self.values)
 
     def __eq__(self, other) -> bool:
         return self.hash == other.hash
@@ -39,6 +40,18 @@ class State:
             str += "\n\r"
 
         return str
+
+    @property
+    def listed_values(self) -> list:
+        return sum(self.values, [])
+
+    @property
+    def zero_position(self) -> int:
+        return self.listed_values.index(0)
+
+    @property
+    def row_size(self) -> int:
+        return len(self.values[0])
 
     def expand(self) -> 'State':
         def apply_offset_on_index(index: Tuple[int, int]):

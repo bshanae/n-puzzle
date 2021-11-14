@@ -1,17 +1,28 @@
-class StateWrap:
-    h_value: int
-    g_value: int
-    f_value: int
-    state = None
-    previous_state_wrap = None
+from typing import Optional
 
-    def __init__(self, h_value: int, g_value: int, state, previous_state=None):
+from algo.n_puzzle import State
+
+
+class StateWrap:
+    # TODO: check to del this
+    # h_value: int
+    # g_value: int
+    # f_value: int
+    # state = None
+    # previous_state_wrap = None
+
+    def __init__(
+        self,
+        h_value: int,
+        g_value: int,
+        state: State,
+        previous_state: Optional[State] = None,
+    ):
         self.h_value = h_value
         self.g_value = g_value
+        self.f_value: int = self.h_value + self.g_value
         self.state = state
         self.previous_state_wrap = previous_state
-
-        self.f_value = self.h_value + self.g_value
 
     def __lt__(self, other) -> bool:
         return self.h_value < other.h_value
