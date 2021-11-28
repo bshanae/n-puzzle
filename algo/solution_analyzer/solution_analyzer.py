@@ -1,11 +1,11 @@
-from typing import List
+from typing import List, Optional, Deque
 
 from algo import n_puzzle
 from algo.solution_analyzer.move import Move
 from algo.solution_analyzer.solution import Solution
 
 
-def analyze_solution(path: List[n_puzzle.State]) -> Solution:
+def analyze_solution(path: Optional[Deque[n_puzzle.State]]) -> Solution:
     moves: List[Move] = []
 
     for i in range(0, len(path) - 1):

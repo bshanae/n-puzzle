@@ -4,12 +4,6 @@ from algo.n_puzzle import State
 
 
 class StateWrap:
-    # TODO: check to del this
-    # h_value: int
-    # g_value: int
-    # f_value: int
-    # state = None
-    # previous_state_wrap = None
 
     def __init__(
         self,
@@ -29,3 +23,5 @@ class StateWrap:
 
     def __hash__(self) -> int:
         return hash(self.state)
+
+

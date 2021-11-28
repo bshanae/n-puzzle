@@ -1,64 +1,54 @@
 import sys
-from typing import List
+from typing import Tuple
 
 from algo import n_puzzle, a_star, solution_analyzer
 import ui
 from reader.argument_parser import ArgParser
-from time import time
 
 from reader.constants import PUZZLE_MAP_TYPE
-from reader.puzzle_check_tools import TargetStateCalculator, check_solvable
+from reader.puzzle_check_tools import TargetStateCalculator
+from algo.n_puzzle.heuristics import misplaced_tiles
+from ui.console.info_storage import info
 
 
-def parse_puzzles(map_file: str) -> List[PUZZLE_MAP_TYPE]:
-    puzzles = []
-    with open(map_file, 'r') as f:
-        for _ in range(2):
-            next(f)
-        puzzle = []
-        lines = f.readlines()
-        for line in lines:
-            if line != '\n':
-                puzzle.append(list(map(int, line.split())))
-            else:
-                puzzles.append(puzzle)
-                puzzle = []
+def get_states_on_start(puzzle: PUZZLE_MAP_TYPE) -> Tuple[n_puzzle.State, n_puzzle.State]:
+    """collect statistics to global var 'info'"""
+    start_state = n_puzzle.State(puzzle)
+    target_state = TargetStateCalculator(puzzle).state
 
-    if puzzle and not puzzles:
-        puzzles.append(puzzle)
-    return puzzles
+    info.start_state = start_state.listed_values
+    info.target_state = target_state.listed_values
+    info.puzzle_size = start_state.size
+
+    return start_state, target_state
 
 
 def do_solvation():
     parser = ArgParser()
-    args = parser.args
-    src_file = args.map_file
+    maps = parser.puzzles
+    greedy, uniform = parser.greedy_and_uniform
+    gui_enabled, console_enabled = parser.gui_and_console
+    heuristic = parser.h_function
 
-    maps = parse_puzzles(src_file)
-
-    algo = a_star.Algo(n_puzzle.heuristics.manhattan)
-    algo.is_greedy = False
-    algo.is_uniform = False
+    algo = a_star.Algo(
+        h_function=heuristic,
+        greedy=greedy,
+        uniform=uniform,
+    )
 
     for one in maps:
-        st_state = n_puzzle.State(one)
-        tg_state = TargetStateCalculator(one).state
-        print('Start state:', st_state.values)
-        print('Target state:', tg_state.values)
+        print('Begin solvation...\n')
+        start_state, target_state = get_states_on_start(one)
+        is_solvable = misplaced_tiles(start_state, target_state)
 
-        is_solvable = check_solvable(st_state, tg_state)
         if not is_solvable:
-            print("UNSOLVABLE!!!")
-            sys.exit(0)
+            ui.present_solution(None, gui_enabled, console_enabled)
+            continue
 
-        start = time()
-        solution_states = algo.solve(st_state, tg_state)
-        dur = time() - start
-
-        print(f'{dur:0.6f}')
+        solution_states = algo.solve(start_state, target_state)
 
         solution = solution_analyzer.analyze_solution(solution_states)
-        ui.present_solution(solution)
+        ui.present_solution(solution, gui_enabled, console_enabled)
     sys.exit(0)
 
 

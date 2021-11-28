@@ -1,6 +1,28 @@
 from typing import Optional
 
 from algo import n_puzzle, solution_analyzer
+from ui.console.info_storage import info
+
+
+def present_statistics(is_solvable: bool):
+    print('algo:', info.algo)
+    print('heuristic:', info.h_function)
+    print('greedy search:', info.greedy)
+    print('uniform-cost search:', info.uniform)
+    print('puzzle size:', info.puzzle_size)
+    print('solution type:', info.solution_type)
+    print('start state:', info.start_state)
+    print('target state:', info.target_state)
+
+    if not is_solvable:
+        print('This puzzle is unsolvable')
+        return
+
+    print('moves to solve:', info.moves_ct)
+    print('time complexity:', info.time_complexity)
+    print('size complexity:', info.size_complexity)
+    print('search duration:', f'{info.duration:.6f} sec')
+    print('process resources in RAM (max rss):', info.max_rss, '\n')
 
 
 def present_solution(solution: solution_analyzer.Solution):
@@ -15,7 +37,7 @@ def print_state(state: n_puzzle.State, move: Optional[solution_analyzer.Move]):
     HIGHLIGHT = '\u001b[36m'
     RESET = '\033[0m'
 
-    str = ""
+    line = ''
 
     for i in range(len(state.values)):
         for j in range(len(state.values[i])):
@@ -23,12 +45,12 @@ def print_state(state: n_puzzle.State, move: Optional[solution_analyzer.Move]):
 
             if value is not None:
                 if move is not None and ((i, j) == move.index_a or (i, j) == move.index_b):
-                    str += "{}{:2}{} ".format(HIGHLIGHT, value, RESET)
+                    line += '{}{:2}{} '.format(HIGHLIGHT, value, RESET)
                 else:
-                    str += "{:2} ".format(value)
+                    line += '{:2} '.format(value)
             else:
-                str += "   "
+                line += '   '
 
-        str += "\n\r"
+        line += '\n\r'
 
-    print(str)
+    print(line)

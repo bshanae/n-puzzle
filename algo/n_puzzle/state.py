@@ -5,10 +5,6 @@ from algo.n_puzzle import zobrist
 
 
 class State:
-    # TODO: check to del this
-    # values: List[List[int]]
-    # hash: int
-
     def __init__(self, values: List[List[int]]):
         self.values: List[List[int]] = values
         self.hash: int = zobrist.hash(self.values)
@@ -16,8 +12,8 @@ class State:
     def __eq__(self, other) -> bool:
         return self.hash == other.hash
 
-    def __getitem__(self, index: Tuple[int, int]) -> int:
-        row_index, value_index = index
+    def __getitem__(self, idx: Tuple[int, int]) -> int:
+        row_index, value_index = idx
         return self.values[row_index][value_index]
 
     def __setitem__(self, index: Tuple[int, int], value: int):
@@ -28,39 +24,42 @@ class State:
         return self.hash
 
     def __str__(self):
-        str = ""
+        str_repr = ""
 
         for row in self.values:
             for value in row:
                 if value is not None:
-                    str += ("{:2} ".format(value))
+                    str_repr += ("{:2} ".format(value))
                 else:
-                    str += "   "
+                    str_repr += "   "
 
-            str += "\n\r"
+            str_repr += "\n\r"
 
-        return str
+        return str_repr
 
     @property
     def listed_values(self) -> list:
         return sum(self.values, [])
 
     @property
-    def zero_position(self) -> int:
-        return self.listed_values.index(0)
-
-    @property
-    def row_size(self) -> int:
+    def size(self) -> int:
         return len(self.values[0])
 
+    def columns(self) -> list:
+        return [list(col) for col in (zip(*self.values))]
+
+    def zero_position(self) -> Tuple[int, int]:
+        zero_index = self.listed_values.index(0)
+        return zero_index // self.size, zero_index % self.size
+
     def expand(self) -> 'State':
-        def apply_offset_on_index(index: Tuple[int, int]):
+        def apply_offset_on_index(idx: Tuple[int, int]):
             offsets = [(+1, 0),
                        (-1, 0),
                        (0, +1),
                        (0, -1)]
 
-            row_index, value_index = index
+            row_index, value_index = idx
 
             for offset_row, offset_value in offsets:
                 test_index = row_index + offset_row, value_index + offset_value

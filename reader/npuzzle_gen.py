@@ -7,7 +7,7 @@ import random
 from pathlib import Path
 from typing import List
 
-PUZZLES_DIR = 'puzzles_generated'
+PUZZLES_DIR = '../puzzles_generated'
 
 
 def make_puzzle(s, solvable, iterations):
@@ -154,7 +154,6 @@ if __name__ == "__main__":
     puzzles = []
     for _ in range(puzzles_ct):
         puzzle = make_puzzle(s, solvable=solv, iterations=args.iterations)
-        import ipdb; ipdb.set_trace()
         puzzles.append(puzzle)
 
     if args.print:
