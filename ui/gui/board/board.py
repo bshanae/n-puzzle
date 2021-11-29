@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Iterator
 
 from pygame import Rect
 
@@ -6,14 +6,13 @@ from algo.solution_analyzer.move import Move
 from ui.gui.context import settings
 from ui.gui.board.cell import Cell
 from ui.gui.tools import math
+from ui.gui.tools.animation_state import AnimationState
 from ui.gui.tools.point import Vector
 
 
 class Board:
-    cells: List[List[Cell]] = []
-    moves: List[Move]
-
     def __init__(self, values: List[List[int]], moves: List[Move]):
+        self.cells: List[List[Cell]] = []
         self.moves = moves
 
         number_of_rows = len(values)
@@ -38,21 +37,24 @@ class Board:
 
                 row.append(Cell(cell_rect, str(values[row_index][column_index])))
 
-    def animate(self):
-        is_first_pause = True
+    def animate(self) -> Iterator[AnimationState]:
+        Board.animate.is_first_pause = True
 
         def get_pause_length():
-            if is_first_pause:
+            if Board.animate.is_first_pause:
+                Board.animate.is_first_pause = False
                 return settings.BOARD_ANIMATION_FIRST_PAUSE
             else:
                 return settings.BOARD_ANIMATION_PAUSE
 
         for move in self.moves:
             for i in range(get_pause_length()):
-                yield None
+                yield AnimationState.RUNNING
 
             for _ in self.animate_move(move):
-                yield None
+                yield AnimationState.RUNNING
+
+        yield AnimationState.FINISHED
 
     def animate_move(self, move: Move):
         cell_a: Cell = self.cells[move.index_a[0]][move.index_a[1]]

@@ -67,11 +67,12 @@ class ArgParser:
         return self.args.g, self.args.u
 
     @property
-    def gui_and_console(self) -> Tuple[bool, bool]:
-        """"Console disabled only in quiet mode :return gui, console"""
-        if self.args.q:
-            return False, False
-        return self.args.v, True
+    def use_console(self) -> bool:
+        return not self.args.q
+
+    @property
+    def use_gui(self) -> bool:
+        return not self.args.q and self.args.v
 
     @property
     def puzzles(self) -> List[PUZZLE_MAP_TYPE]:

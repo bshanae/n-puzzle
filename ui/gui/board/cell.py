@@ -9,10 +9,6 @@ from ui.gui.tools.point import Vector
 
 
 class Cell:
-    rect: pygame.Rect
-    txt_rect: pygame.Rect
-    string: string
-
     def __init__(self, rect: pygame.Rect, string: string):
         self.rect = rect
         self.text_rect = rect.inflate(-2 * settings.CELL_PADDING, -2 * settings.CELL_PADDING)

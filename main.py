@@ -25,30 +25,25 @@ def get_states_on_start(puzzle: PUZZLE_MAP_TYPE) -> Tuple[n_puzzle.State, n_puzz
 
 def do_solvation():
     parser = ArgParser()
-    maps = parser.puzzles
+    puzzles = parser.puzzles
     greedy, uniform = parser.greedy_and_uniform
-    gui_enabled, console_enabled = parser.gui_and_console
-    heuristic = parser.h_function
 
-    algo = a_star.Algo(
-        h_function=heuristic,
-        greedy=greedy,
-        uniform=uniform,
-    )
+    algo = a_star.Algo(h_function=parser.h_function, greedy=greedy, uniform=uniform,)
 
-    for one in maps:
+    for index, puzzle in enumerate(puzzles):
         print('Begin solvation...\n')
-        start_state, target_state = get_states_on_start(one)
+        start_state, target_state = get_states_on_start(puzzle)
         is_solvable = misplaced_tiles(start_state, target_state)
 
         if not is_solvable:
-            ui.present_solution(None, gui_enabled, console_enabled)
+            ui.present_solution(None, parser.use_console, parser.use_gui, index == len(puzzles) - 1)
             continue
 
         solution_states = algo.solve(start_state, target_state)
 
         solution = solution_analyzer.analyze_solution(solution_states)
-        ui.present_solution(solution, gui_enabled, console_enabled)
+        ui.present_solution(solution, parser.use_console, parser.use_gui, index == len(puzzles) - 1)
+
     sys.exit(0)
 
 
