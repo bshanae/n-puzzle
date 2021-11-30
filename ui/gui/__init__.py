@@ -1,3 +1,8 @@
+import os
+
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
+import pygame
+
 from algo import solution_analyzer
 from ui.gui import solution_presentation
 
