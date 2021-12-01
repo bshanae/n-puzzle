@@ -47,8 +47,8 @@ class ArgParser:
         parser.add_argument('-q', action='store_true', help='Quiet mode')
         parser.add_argument('-g', action='store_true', help='Greedy search')
         parser.add_argument('-u', action='store_true', help='Uniform-cost search')
-        parser.add_argument('-S', '--solvable', action='store_false', help='Is generated map solvable')
-        parser.add_argument('-U', '--unsolvable', action='store_false', help='Is generated map unsolvable')
+        parser.add_argument('-S', '--solvable', action='store_true', default=False, help='Is generated map solvable')
+        parser.add_argument('-U', '--unsolvable', action='store_true', default=False, help='Is generated map unsolvable')
 
         return parser
 
@@ -81,20 +81,20 @@ class ArgParser:
 
     @property
     def puzzles(self) -> List[PUZZLE_MAP_TYPE]:
-        args = self.args
-        if args.file:
-            return self._read_from_file(args.file)
+        if self.args.file:
+            return self._read_from_file(self.args.file)
 
         random.seed()
-        solvable = True
-        if not args.solvable and not args.unsolvable:
-            solvable = random.choice([True, False])
-        elif args.solvable:
-            solvable = args.solvable
-        elif args.unsolvable:
-            solvable = args.unsolvable
+        solvable = False
 
-        return self._generate_puzzle(args.count, args.size, solvable, args.i)
+        if self.args.solvable == self.args.unsolvable:
+            solvable = random.choice([True, False])
+        elif self.args.solvable:
+            solvable = True
+        elif self.args.unsolvable:
+            solvable = False
+
+        return self._generate_puzzle(self.args.count, self.args.size, solvable, self.args.i)
 
     def _read_from_file(self, filename: str) -> List[PUZZLE_MAP_TYPE]:
         """:except ParserError"""

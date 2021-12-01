@@ -1,3 +1,4 @@
+import sys
 from queue import PriorityQueue
 from collections import deque
 from typing import Deque, Optional, Callable
@@ -65,7 +66,7 @@ class Algo:
                 self._time_complexity = open_state_wraps.qsize()
                 return self.restore_path(current_state_wrap)
 
-            closed_state_wraps[current_state_wrap.state] = current_state_wrap
+            closed_state_wraps[current_state_wrap.__hash__()] = current_state_wrap
 
             for expanded_state in current_state_wrap.state.expand():
                 expanded_state_wrap = StateWrap(
@@ -74,17 +75,15 @@ class Algo:
                     state=expanded_state,
                     previous_state=current_state_wrap,
                 )
-
-                closed_state_wrap = closed_state_wraps.get(expanded_state, None)
-                # TODO: подумать, нужно ли оставлять проверку f_value для закрытых состояний?
-                if closed_state_wrap and closed_state_wrap.f_value <= expanded_state_wrap.f_value:
+                if closed_state_wraps.get(expanded_state_wrap.__hash__(), None):
                     continue
 
-                opened_state_wrap = opened_states.get(expanded_state, None)
-                if opened_state_wrap and opened_state_wrap.f_value <= expanded_state_wrap.f_value:
+                opened_state_wrap = opened_states.get(expanded_state_wrap.__hash__(), None)
+                if opened_state_wrap and opened_state_wrap.f_value >= expanded_state_wrap.f_value:
+                    opened_states[expanded_state_wrap.__hash__()] = expanded_state_wrap
                     continue
 
-                opened_states[expanded_state_wrap.state] = expanded_state_wrap
+                opened_states[expanded_state_wrap.__hash__()] = expanded_state_wrap
                 open_state_wraps.put((expanded_state_wrap.f_value, expanded_state_wrap))
 
         self._size_complexity = len(closed_state_wraps)

@@ -80,9 +80,14 @@ class State:
 
             return State(new_values)
 
+        combinations = set()
         for index, value in self.enumerate():
             for offset_index in apply_offset_on_index(index):
-                yield clone_and_swap(index, offset_index)
+                new_combination = clone_and_swap(index, offset_index)
+                h = hash(new_combination)
+                if h not in combinations:
+                    combinations.add(h)
+                    yield new_combination
 
     cached_enumeration: List[Tuple[Tuple[int, int], int]] = None
 
