@@ -2,12 +2,14 @@ import copy
 from typing import List, Tuple
 
 from algo.n_puzzle import zobrist
+import uuid
 
 
 class State:
     def __init__(self, values: List[List[int]]):
         self.values: List[List[int]] = values
         self.hash: int = zobrist.hash(self.values)
+        self.id = uuid.uuid4()
 
     def __eq__(self, other) -> bool:
         return self.hash == other.hash

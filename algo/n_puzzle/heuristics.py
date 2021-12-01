@@ -47,7 +47,19 @@ def linear_conflicts(current: State, target: State) -> int:
     return h_cost
 
 
+def hamming(current: State, target: State) -> int:
+    """exclude zero to made a heuristic admissible"""
+    current_val = current.listed_values
+    target_val = target.listed_values
+    h_cost = 0
+    for i in range(target.size * target.size):
+        if current_val[i] != 0 and current_val[i] != target_val[i]:
+            h_cost += 1
+    return h_cost
+
+
 HEURISTICS: Dict[str, Callable] = {
     'manhattan': manhattan,
     'linear': linear_conflicts,
+    'hamming': hamming,
 }

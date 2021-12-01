@@ -46,6 +46,7 @@ class Algo:
     @algo_stat_collector
     def solve(self, start_state: State, target_state: State) -> Optional[Deque]:
         closed_state_wraps = {}
+        opened_states = {}
 
         start_state_wrap = StateWrap(
             h_value=self.compute_h(start_state, target_state),
@@ -74,10 +75,16 @@ class Algo:
                     previous_state=current_state_wrap,
                 )
 
-                similar_state_wrap = closed_state_wraps.get(expanded_state, None)
-                if similar_state_wrap and similar_state_wrap.f_value <= expanded_state_wrap.f_value:
+                closed_state_wrap = closed_state_wraps.get(expanded_state, None)
+                # TODO: подумать, нужно ли оставлять проверку f_value для закрытых состояний?
+                if closed_state_wrap and closed_state_wrap.f_value <= expanded_state_wrap.f_value:
                     continue
 
+                opened_state_wrap = opened_states.get(expanded_state, None)
+                if opened_state_wrap and opened_state_wrap.f_value <= expanded_state_wrap.f_value:
+                    continue
+
+                opened_states[expanded_state_wrap.state] = expanded_state_wrap
                 open_state_wraps.put((expanded_state_wrap.f_value, expanded_state_wrap))
 
         self._size_complexity = len(closed_state_wraps)

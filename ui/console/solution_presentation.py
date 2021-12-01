@@ -5,17 +5,23 @@ from ui.console.info_storage import info
 
 
 def present_statistics(is_solvable: bool):
+    if info.original_solution_type != info.solution_type:
+        print(f'Note!\tPuzzle is unsolvable in given target type: {info.original_solution_type}')
+        print(f'\tFind solvable target type: {info.solution_type}\n')
+
     print('algo:', info.algo)
     print('heuristic:', info.h_function)
     print('greedy search:', info.greedy)
     print('uniform-cost search:', info.uniform)
     print('puzzle size:', info.puzzle_size)
-    print('solution type:', info.solution_type)
+
+    if info.original_solution_type == info.solution_type:
+        print('solution type:', info.solution_type)
     print('start state:', info.start_state)
     print('target state:', info.target_state)
 
     if not is_solvable:
-        print('This puzzle is unsolvable')
+        print('This puzzle is unsolvable in any target states!')
         return
 
     print('moves to solve:', info.moves_ct)

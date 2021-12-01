@@ -8,6 +8,7 @@ class Info:
         self.puzzle_size: int = 0
         self.start_state: list = []
         self.target_state: list = []
+        self.original_solution_type: str = ''
         self.solution_type: str = ''
         self.max_rss: int = 0
         self.time_complexity: int = 0
