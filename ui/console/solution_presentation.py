@@ -6,8 +6,8 @@ from ui.console.info_storage import info
 
 def present_statistics(is_solvable: bool):
     if info.original_solution_type != info.solution_type:
-        print(f'Note!\tPuzzle is unsolvable in given target type: {info.original_solution_type}')
-        print(f'\tFind solvable target type: {info.solution_type}\n')
+        print(f'Note!\tPuzzle is unsolvable in given target state: {info.original_solution_type}')
+        print(f'\tFind solvable target state: {info.solution_type}\n')
 
     print('algo:', info.algo)
     print('heuristic:', info.h_function)

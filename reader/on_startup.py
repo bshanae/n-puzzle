@@ -2,7 +2,7 @@ from typing import Callable, Tuple
 
 from algo import n_puzzle
 from algo.n_puzzle.heuristics import misplaced_tiles
-from reader.constants import PUZZLE_MAP_TYPE, SNAIL, ZERO_LAST, ZERO_FIRST
+from reader.constants import PUZZLE_MAP_TYPE, MAP_TYPES
 from reader.puzzle_check_tools import TargetStateCalculator
 from ui import info
 
@@ -41,8 +41,7 @@ class StatesOnStart:
             self.solvable_target_type = map_type
             return self.start_state, target_state, True
 
-        types_except_default = [t for t in [SNAIL, ZERO_LAST, ZERO_FIRST]]
-        for new_type in types_except_default:
+        for new_type in MAP_TYPES:
             for reverse in [True, False]:
                 target_state = state_calculator.state(new_type, reverse=reverse)
                 if misplaced_tiles(self.start_state, target_state):

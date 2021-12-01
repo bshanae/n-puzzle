@@ -4,7 +4,7 @@ from typing import List, Optional, Callable, Tuple
 import random
 
 from algo.n_puzzle.heuristics import HEURISTICS
-from reader.constants import PUZZLE_MAP_TYPE, SNAIL, ZERO_LAST, ZERO_FIRST
+from reader.constants import PUZZLE_MAP_TYPE, SNAIL, MAP_TYPES
 from reader.npuzzle_gen import make_puzzle
 
 COMMENT_CHAR = '#'
@@ -39,7 +39,7 @@ class ArgParser:
         parser = argparse.ArgumentParser()
         parser.add_argument('-f', '--file', help='Input file')
         parser.add_argument('-H', choices=HEURISTICS.keys(), default='manhattan', help='heuristic func')
-        parser.add_argument('-t', choices=[SNAIL, ZERO_LAST, ZERO_FIRST], default=SNAIL, help='target state type')
+        parser.add_argument('-t', choices=MAP_TYPES, default=SNAIL, help='target state type')
         parser.add_argument('-s', '--size', type=int,  default=3, help='Size to generate random map: default 3',)
         parser.add_argument('-c', '--count', type=int, default=1, help='Count of maps to generate: default 1',)
         parser.add_argument('-i', type=int, default=10000, help='Number of passes to generator')
