@@ -1,6 +1,8 @@
+import copy
 from typing import Dict, Callable
 
 from algo.n_puzzle.state import State
+from reader.constants import PUZZLE_MAP_TYPE
 
 
 def manhattan(current: State, target: State) -> int:
@@ -12,25 +14,52 @@ def manhattan(current: State, target: State) -> int:
     return h_cost
 
 
-def misplaced_heuristic(current: list, target: list) -> int:
+def misplaced_one_swap(current: PUZZLE_MAP_TYPE, target: PUZZLE_MAP_TYPE) -> bool:
+    misplaced = []
+    for row in range(len(current)):
+        for col in range(len(current[row])):
+            cur_elem = current[row][col]
+            target_elem = target[row][col]
+            if cur_elem != target_elem:
+                misplaced.append((cur_elem, row, col))
+
+    if len(misplaced) == 2:
+        tmp_values = copy.deepcopy(current)
+        first, second = misplaced
+        tmp_values[first[1]][first[2]] = second[0]
+        tmp_values[second[1]][second[2]] = first[0]
+        if tmp_values == target:
+            return True
+    return False
+
+
+def misplaced_heuristic(current: PUZZLE_MAP_TYPE, target: PUZZLE_MAP_TYPE) -> int:
     misplaced = 0
-    for cur_pos in range(len(target)):
-        for next_pos in range(cur_pos + 1, len(target)):
-            cur_elem = current[cur_pos]
-            next_elem = current[next_pos]
-            if not (target.count(cur_elem) and target.count(next_elem)):
-                # here is for case of linear conflicts, index of elem may not be in a row/col
+    if misplaced_one_swap(current, target):
+        return 1
+    current_listed = sum(current, [])
+    target_listed = sum(target, [])
+
+    for cur_pos in range(len(target_listed)):
+        for next_pos in range(cur_pos + 1, len(target_listed)):
+            cur_elem = current_listed[cur_pos]
+            next_elem = current_listed[next_pos]
+            if not (target_listed.count(cur_elem) and target_listed.count(next_elem)):
                 continue
-            if target.index(cur_elem) > target.index(next_elem):
+
+            if target_listed.index(cur_elem) > target_listed.index(next_elem):
                 misplaced += 1
+
     return misplaced
 
 
 def misplaced_tiles(start_state: State, target_state: State) -> bool:
-    misplaced = misplaced_heuristic(start_state.listed_values, target_state.listed_values)
+    misplaced = misplaced_heuristic(start_state.values, target_state.values)
     zero_distance = sum(
         map(lambda x: abs(x[0] - x[1]), zip(start_state.zero_position(), target_state.zero_position()))
     )
+    if misplaced == 1 and zero_distance == 0:
+        return True
     return (not misplaced % 2) == (not zero_distance % 2)
 
 
@@ -40,8 +69,8 @@ def linear_conflicts(current: State, target: State) -> int:
     target_cols = target.columns()
     for i in range(current.size):
         conflicts = (
-            misplaced_heuristic(current.values[i], target.values[i])
-            + misplaced_heuristic(current_cols[i], target_cols[i])
+            misplaced_heuristic([current.values[i]], [target.values[i]])
+            + misplaced_heuristic([current_cols[i]], [target_cols[i]])
         )
         h_cost += conflicts
     return h_cost
