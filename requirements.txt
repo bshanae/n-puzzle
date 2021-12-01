@@ -1,0 +1,6 @@
+# gui
+pygame
+
+# dev
+ipython
+ipdb

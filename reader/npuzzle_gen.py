@@ -98,10 +98,8 @@ def print_puzzles(puzzles_list: List[list], is_solvable: bool, size: int) -> Non
     print("# This puzzle is %s" % ("solvable" if is_solvable else "unsolvable"))
     print("%d" % size)
     for one_puzzle in puzzles_list:
-        for y in range(size):
-            for x in range(size):
-                print(one_puzzle[y + x], end=' ', )
-            print('')
+        for i in range(0, size * size, size):
+            print(' '.join(map(str, one_puzzle[i : i + size])))
         print('')
 
 
